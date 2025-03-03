@@ -1,4 +1,4 @@
-from sklearn.preprocessing import train_test_split
+from sklearn.model_selection import train_test_split
 import pandas as pd
 import os
 import logging
@@ -35,7 +35,7 @@ def read_data(data_path):
 def preprocess_data(df:pd.DataFrame)->pd.DataFrame:
     """preprocess data"""
     try:
-        df.drop(columns=['Unnamed: 2','Unamed: 3','Unnamed: 4'], inplace=True)
+        df.drop(columns=['Unnamed: 2','Unnamed: 3','Unnamed: 4'], inplace=True)
         df.rename(columns={'v1':'label','v2':'text'}, inplace=True)
 
         logger.debug("data preprocessed successfully")
@@ -44,10 +44,10 @@ def preprocess_data(df:pd.DataFrame)->pd.DataFrame:
         logger.error(f"error in preprocessing data: {str(e)}")
         return None
 
-def save_data(train_df:pd.DataFrame, test_df,data_dir:pd.DataFrame)->None:
+def save_data(train_df:pd.DataFrame, test_df:pd.DataFrame,data_dir:pd.DataFrame)->None:
     """save data to csv file"""
     try:
-        raw_data=os.makedirs.join(data_dir, 'raw')
+        raw_data=os.path.join(data_dir, 'raw')
         os.makedirs(raw_data, exist_ok=True)
         train_df.to_csv(os.path.join(raw_data, 'train.csv'), index=False)
         test_df.to_csv(os.path.join(raw_data, 'test.csv'), index=False)
@@ -57,12 +57,19 @@ def save_data(train_df:pd.DataFrame, test_df,data_dir:pd.DataFrame)->None:
         logger.error(f"error in saving data: {str(e)}")
 
 def main():
-    data_path="data/spam.csv"
-    data_dir="data"
-    df=read_data(data_path)
-    logger.debug("data loaded successfully")
-    df=preprocess_data(df)
-    logger.debug("data preprocessed successfully")
-    train_df, test_df=train_test_split(df, test_size=0.2, random_state=42)
-    logger.debug("data split successfully")
-    save_data(train_df, test_df, data_dir)
+
+    try:     
+        data_path="https://raw.githubusercontent.com/vikashishere/Datasets/main/spam.csv"
+        data_dir="./data"
+        df=read_data(data_path)
+        logger.debug("data loaded successfully")
+        df=preprocess_data(df)
+        logger.debug("data preprocessed successfully")
+        train_df, test_df=train_test_split(df, test_size=0.2, random_state=42)
+        logger.debug("data split successfully")
+        save_data(train_df, test_df, data_dir)
+    except Exception as e:
+        logger.error(f"error in main: {str(e)}")
+
+if __name__=="__main__":
+    main()
