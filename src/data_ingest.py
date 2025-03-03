@@ -22,6 +22,9 @@ file_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
+def load_params(config_path:str)->dict:
+    pass
+
 def read_data(data_path):
     """load data from csv file"""
     try:
