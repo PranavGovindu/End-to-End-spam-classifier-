@@ -1,4 +1,4 @@
-# ML-Pipeline-full
+# DVC pipeline
 
 ## Overview
 
