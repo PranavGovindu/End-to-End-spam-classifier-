@@ -1,37 +1,101 @@
-# DVC pipeline
+# DVC ML Pipeline
 
 ## Overview
 
-A trial end to end pipeline for practice
-nlp code was taken from kaggle 
-i initally added s3 bucket but deleted again cause of charges 
+This project implements an end-to-end Machine Learning pipeline using DVC (Data Version Control) for reproducible experimentation. The pipeline performs text classification using TF-IDF features and a Random Forest classifier, with the model exported in ONNX format.
 
-## Features
+## Pipeline Stages
 
-- Data preprocessing
-- Model training
-- Model evaluation
-- Model deployment
+1. **Data Ingestion** (`src/data_ingestion.py`)
+   - Loads and splits the raw data into train/test sets
+   - Configurable test size (default: 10%)
+
+2. **Data Preprocessing** (`src/data_preprocessing.py`)
+   - Processes raw text data
+   - Prepares interim datasets
+
+3. **Feature Engineering** (`src/feature_engineering.py`)
+   - Applies TF-IDF vectorization
+   - Configurable maximum features (default: 20)
+
+4. **Model Building** (`src/model_building.py`)
+   - Trains a Random Forest Classifier
+   - Configurable parameters:
+     - n_estimators: 22
+     - random_state: 2
+   - Exports model in ONNX format
+
+5. **Model Evaluation** (`src/model_evaluation.py`)
+   - Evaluates model performance
+   - Current metrics:
+     - Accuracy: 1.0
+     - Precision: 1.0
+     - Recall: 1.0
+
+## Project Structure
+
+```plaintext
+├── data/
+│   ├── interim/          # Preprocessed data
+│   ├── processed/        # Feature engineered data
+│   └── raw/             # Original dataset
+├── models/              # Saved models (ONNX format)
+├── reports/            # Performance metrics
+├── src/               # Source code
+└── logs/              # Pipeline execution logs
+```
 
 ## Installation
 
-```
-clone the repository
-run pip install -r requirements.txt
-run dvc repro / dvc exp run
+1. Clone the repository:
 
-
-
+```bash
+git clone <repository-url>
+cd ML-Pipeline-full
 ```
 
+1. Install dependencies:
 
-## Notes
+```bash
+pip install -r requirements.txt
+```
 
-An S3 bucket was initially added for data storage, but it was deleted to avoid incurring charges.
+1. Run the pipeline:
+
+```bash
+dvc repro  # Run the complete pipeline
+# OR
+dvc exp run  # Run as an experiment
+```
+
+## Configuration
+
+The pipeline parameters can be configured in `params.yaml`:
+
+```yaml
+data_ingestion:
+  test_size: 0.10
+feature_engineering:
+  max_features: 20
+model_building:
+  n_estimators: 22
+  random_state: 2
+```
+
+## Monitoring and Visualization
+
+- Pipeline metrics are tracked using DVCLive
+
+- View metrics and plots using:
+
+```bash
+dvc metrics show
+dvc plots show
+```
 
 ## Contributing
 
-Contributions are welcome! Please fork the repository and submit a pull request.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
